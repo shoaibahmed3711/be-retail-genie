@@ -1,6 +1,6 @@
 import AuthService from '../../services/auth/authService.js';
 import AppError from '../../utils/appError.js';
-import jwt from 'jsonwebtoken';
+
 
 class AuthController {
     async register(req, res) {
