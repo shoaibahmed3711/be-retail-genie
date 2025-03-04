@@ -1,14 +1,12 @@
-// routes/settingsRoutes.js
+
 import express from 'express';
 import User from '../models/User.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Apply authentication middleware to all settings routes
 router.use(authMiddleware);
 
-// Get all user settings
 router.get('/', async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -21,12 +19,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Update personal information
 router.put('/account', async (req, res) => {
   try {
     const { firstName, lastName, phone } = req.body;
     
-    // Validate input
     if (!firstName || !lastName) {
       return res.status(400).json({ message: 'First name and last name are required' });
     }
@@ -43,7 +39,6 @@ router.put('/account', async (req, res) => {
   }
 });
 
-// Update email address (requires verification)
 router.put('/account/email', async (req, res) => {
   try {
     const { email } = req.body;
@@ -52,14 +47,11 @@ router.put('/account/email', async (req, res) => {
       return res.status(400).json({ message: 'Email is required' });
     }
     
-    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser._id.toString() !== req.user.id) {
       return res.status(400).json({ message: 'Email already in use' });
     }
     
-    // In a real app, you'd implement email verification here
-    // For now, just update the email
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { email },
@@ -72,21 +64,16 @@ router.put('/account/email', async (req, res) => {
   }
 });
 
-// Security settings
 router.put('/security/password', async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
-    // In a real app, validate password strength
     if (!currentPassword || !newPassword) {
       return res.status(400).json({ message: 'Current and new passwords are required' });
     }
     
     const user = await User.findById(req.user.id).select('+password');
     
-    // In a real app, compare hashed passwords here
-    
-    // Update password
     user.password = newPassword; // In a real app, hash this password
     user.passwordLastChanged = new Date();
     await user.save();
