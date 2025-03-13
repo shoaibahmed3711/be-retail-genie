@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 // Performance Metrics Schema
 const performanceMetricSchema = new mongoose.Schema({

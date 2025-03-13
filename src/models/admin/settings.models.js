@@ -128,7 +128,6 @@ const UserSchema = new mongoose.Schema({
     }
   },
   
-  // Connected accounts
   connectedAccounts: [{
     provider: {
       type: String,
@@ -142,7 +141,6 @@ const UserSchema = new mongoose.Schema({
     dateConnected: Date
   }],
   
-  // Integrations
   integrations: [{
     service: {
       type: String,
