@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const ProductSchema = new mongoose.Schema({
@@ -128,4 +127,5 @@ ProductSchema.methods.recordSale = function(quantity, salePrice) {
 ProductSchema.set('toJSON', { virtuals: true });
 ProductSchema.set('toObject', { virtuals: true });
 
-module.exports = mongoose.model('Product', ProductSchema);
+const Product = mongoose.model('Product', ProductSchema);
+export default Product;

@@ -6,11 +6,10 @@ import {
   updateProduct,
   deleteProduct,
   recordProductSale
-} from '../../controllers/brand-manager/products.controllers.js';
+} from '../../controllers/brand-owner/products.controllers.js';
 
 const router = express.Router();
 
-// Base route: /api/products
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 router.post('/', createProduct);

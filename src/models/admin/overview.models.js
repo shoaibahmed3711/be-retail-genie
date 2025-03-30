@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Performance Metrics Schema
 const performanceMetricSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -32,7 +31,6 @@ const performanceMetricSchema = new mongoose.Schema({
   }
 });
 
-// Activity Schema
 const activitySchema = new mongoose.Schema({
   type: {
     type: String,
@@ -62,7 +60,6 @@ const activitySchema = new mongoose.Schema({
   }
 });
 
-// Notification Schema
 const notificationSchema = new mongoose.Schema({
   type: {
     type: String,
@@ -92,7 +89,6 @@ const notificationSchema = new mongoose.Schema({
   }
 });
 
-// Brand Schema
 const brandSchema = new mongoose.Schema({
   name: {
     type: String,

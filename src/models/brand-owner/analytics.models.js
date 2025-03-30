@@ -1,5 +1,4 @@
-// models/Sale.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const SaleSchema = new mongoose.Schema({
   month: {
@@ -33,9 +32,6 @@ const SaleSchema = new mongoose.Schema({
 SaleSchema.index({ month: 1, year: 1 }, { unique: true });
 
 module.exports = mongoose.model('Sale', SaleSchema);
-
-// models/Product.js
-const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
   name: {
@@ -94,9 +90,6 @@ const ProductSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Product', ProductSchema);
 
-// models/Customer.js
-const mongoose = require('mongoose');
-
 const CustomerSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -141,9 +134,6 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Customer', CustomerSchema);
-
-// models/Order.js
-const mongoose = require('mongoose');
 
 const OrderItemSchema = new mongoose.Schema({
   product: {
@@ -196,9 +186,6 @@ const OrderSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Order', OrderSchema);
-
-// models/AnalyticsSummary.js
-const mongoose = require('mongoose');
 
 const AnalyticsSummarySchema = new mongoose.Schema({
   date: {

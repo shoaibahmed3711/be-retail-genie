@@ -1,8 +1,7 @@
-// models/User.js
+
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-  // Personal information
   firstName: {
     type: String,
     required: true,

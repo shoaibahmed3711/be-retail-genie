@@ -6,20 +6,20 @@ import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 import { connectDB } from "./src/config/database.js";
 
-// middleware
 import errorHandler from "./src/middleware/errorMiddleware.js";
 
-// Routes
 import authRoutes from "./src/routes/authRoutes.js";
+
+//brand owner routes
+import brandOwnerProductsRoutes from "./src/routes/brand-owner/products.routes.js";
+import brandOwnerBrandRoutes from "./src/routes/brand-owner/brand.routes.js";
 
 dotenv.config();
 const app = express();
 
-// Security Middleware
 app.use(helmet());
 app.use(cors());
 
-// Logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan("dev"));
 }
@@ -33,13 +33,17 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-// Body Parser
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+
+// brand owner Routes
+app.use("/api/products", brandOwnerProductsRoutes);
+app.use("/api/brand", brandOwnerBrandRoutes);
+
 
 // Handle 404
 app.use((req, res) => {

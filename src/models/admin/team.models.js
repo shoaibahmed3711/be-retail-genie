@@ -55,7 +55,7 @@ const teamMemberSchema = new mongoose.Schema({
     }
   }],
   avatar: {
-    type: String, // Store the URL/path to the avatar image
+    type: String, 
     default: null
   },
   isOwner: {

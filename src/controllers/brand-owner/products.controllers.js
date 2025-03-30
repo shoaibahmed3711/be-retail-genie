@@ -1,4 +1,4 @@
-import Product from '../../models/brand-manager/products.models.js';
+import Product from '../../models/brand-owner/products.models.js';
 
 // Get all products
 export const getAllProducts = async (req, res) => {

@@ -59,7 +59,7 @@ const brandSchema = new mongoose.Schema({
     default: Date.now
   }
 }, {
-  timestamps: true // This will automatically handle createdAt and updatedAt
+  timestamps: true
 });
 
 // Create indexes for frequently queried fields

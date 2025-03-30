@@ -51,7 +51,7 @@ const meetingSchema = new mongoose.Schema({
         trim: true
     }
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields automatically
+    timestamps: true 
 });
 
 // Add indexes for common queries

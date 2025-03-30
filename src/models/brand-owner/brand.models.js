@@ -1,24 +1,8 @@
-// Import mongoose
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
-// Business Hours Schema (sub-document)
-const businessHoursSchema = new Schema({
-  open: {
-    type: String,
-    default: '09:00'
-  },
-  close: {
-    type: String,
-    default: '17:00'
-  },
-  isOpen: {
-    type: Boolean,
-    default: true
-  }
-});
-
-// Social Links Schema (sub-document)
+// Social Links Schema - for storing brand social media profiles
 const socialLinksSchema = new Schema({
   facebook: {
     type: String,
@@ -35,270 +19,122 @@ const socialLinksSchema = new Schema({
   instagram: {
     type: String,
     default: ''
-  },
-  youtube: {
-    type: String,
-    default: ''
-  },
-  pinterest: {
-    type: String,
-    default: ''
-  }
-});
-
-// Team Member Schema (sub-document)
-const teamMemberSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  role: {
-    type: String,
-    required: true
-  },
-  photo: {
-    type: String,
-    default: ''
-  },
-  order: {
-    type: Number,
-    default: 0
-  }
-});
-
-// Visibility Settings Schema (sub-document)
-const visibilitySettingsSchema = new Schema({
-  isPublic: {
-    type: Boolean,
-    default: true
-  },
-  showEmail: {
-    type: Boolean,
-    default: true
-  },
-  showPhone: {
-    type: Boolean,
-    default: true
-  },
-  showAddress: {
-    type: Boolean,
-    default: true
-  },
-  showSocial: {
-    type: Boolean,
-    default: true
-  },
-  showGallery: {
-    type: Boolean,
-    default: true
-  }
-});
-
-// Change History Schema (sub-document)
-const historyEntrySchema = new Schema({
-  action: {
-    type: String,
-    required: true
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: false
   }
 });
 
 // Main Brand Schema
 const brandSchema = new Schema({
-  // Basic Info
+  // Basic Brand Information
   name: {
     type: String,
-    required: true,
+    required: [true, 'Brand name is required'],
     trim: true
   },
   tagline: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
   mission: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
-
-  // Contact
+  
+  // Contact Information
   email: {
     type: String,
     trim: true,
     validate: {
       validator: function(v) {
-        return /\S+@\S+\.\S+/.test(v) || v === '';
+        return !v || /\S+@\S+\.\S+/.test(v);
       },
-      message: 'Invalid email format'
-    }
+      message: props => 'Invalid email format'
+    },
+    default: ''
   },
   phone: {
     type: String,
     trim: true,
     validate: {
       validator: function(v) {
-        return /^\+?[\d\s-]{8,}$/.test(v) || v === '';
+        return !v || /^\+?[\d\s-]{8,}$/.test(v);
       },
-      message: 'Invalid phone format'
-    }
+      message: props => 'Invalid phone format'
+    },
+    default: ''
   },
   website: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
   address: {
     type: String,
-    trim: true
-  },
-
-  // Media
-  logo: {
-    type: String, // URL or Base64 data
+    trim: true,
     default: ''
   },
-  galleryImages: [{
-    type: String, // URLs or Base64 data
-    maxlength: 6 // Enforced in the application logic as well
-  }],
-
-  // Organization
-  businessHours: {
-    monday: businessHoursSchema,
-    tuesday: businessHoursSchema,
-    wednesday: businessHoursSchema,
-    thursday: businessHoursSchema,
-    friday: businessHoursSchema,
-    saturday: businessHoursSchema,
-    sunday: businessHoursSchema
-  },
-  socialLinks: socialLinksSchema,
-  teamMembers: [teamMemberSchema],
-
-  // Classification
-  categories: [{
-    type: String,
-    trim: true
-  }],
-  keywords: [{
-    type: String,
-    trim: true
-  }],
   
-  // Settings
-  theme: {
-    type: String,
-    enum: ['blue', 'green', 'purple', 'red'],
-    default: 'blue'
+  // Media
+  logo: {
+    type: String, // URL to image
+    default: ''
   },
-  visibilitySettings: visibilitySettingsSchema,
-  languages: [{
-    type: String,
-    enum: ['en', 'es', 'fr', 'de', 'zh', 'it', 'ja'],
-    default: ['en']
-  }],
   
-  // Metadata
-  changeHistory: [historyEntrySchema],
+  // Social Media
+  socialLinks: {
+    type: socialLinksSchema,
+    default: () => ({})
+  },
+  
+  // Owner Reference
+  owner: {
+    type: String,
+    required: true,
+    default: 'temp-owner-123'
+  },
+  
+  // Timestamps
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    immutable: true
   },
   updatedAt: {
     type: Date,
     default: Date.now
-  },
-  
-  // User relationship
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  collaborators: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }]
+  }
 });
 
-// Pre-save middleware to update the updatedAt field
+// Update the 'updatedAt' timestamp before saving
 brandSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
-// Add a method to record changes to the history
-brandSchema.methods.addToHistory = function(action, userId) {
-  const historyEntry = {
-    action,
-    timestamp: Date.now(),
-    user: userId
-  };
-  
-  this.changeHistory.unshift(historyEntry);
-  
-  // Keep only the last 15 changes
-  if (this.changeHistory.length > 15) {
-    this.changeHistory = this.changeHistory.slice(0, 15);
-  }
+// Find brand by owner
+brandSchema.statics.findByOwner = function(ownerId) {
+  return this.findOne({ owner: ownerId });
 };
 
-// Create analytics virtual to calculate metrics
-brandSchema.virtual('analytics').get(function() {
-  // In a real application, you would calculate these from other collections
-  // This is a placeholder implementation
-  return {
-    profileViews: Math.floor(Math.random() * 1000),
-    socialClicks: Math.floor(Math.random() * 500),
-    changesThisWeek: this.changeHistory.filter(
-      entry => new Date(entry.timestamp) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    ).length
-  };
-});
+// Instance method to update brand data
+brandSchema.methods.updateBrandInfo = function(brandData) {
+  const updateableFields = [
+    'name', 'tagline', 'mission', 
+    'email', 'phone', 'website', 'address',
+    'socialLinks'
+  ];
+  
+  updateableFields.forEach(field => {
+    if (brandData[field] !== undefined) {
+      this[field] = brandData[field];
+    }
+  });
+  
+  return this.save();
+};
 
-// Create the model from the schema
+// Create Brand model
 const Brand = mongoose.model('Brand', brandSchema);
 
-// User Schema (referenced by Brand)
-const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'user'],
-    default: 'user'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-const User = mongoose.model('User', userSchema);
-
-// Export the models
-module.exports = {
-  Brand,
-  User
-};
+export default Brand;
