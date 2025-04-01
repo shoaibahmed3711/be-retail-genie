@@ -13,6 +13,7 @@ import authRoutes from "./src/routes/authRoutes.js";
 //brand owner routes
 import brandOwnerProductsRoutes from "./src/routes/brand-owner/products.routes.js";
 import brandOwnerBrandRoutes from "./src/routes/brand-owner/brand.routes.js";
+import brandManagerTeamRoutes from "./src/routes/brand-manager/team.routes.js";
 
 dotenv.config();
 const app = express();
@@ -31,8 +32,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(errorHandler);
-
+// Body parser middleware - must come before routes
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
@@ -43,7 +43,10 @@ app.use("/api/auth", authRoutes);
 // brand owner Routes
 app.use("/api/products", brandOwnerProductsRoutes);
 app.use("/api/brand", brandOwnerBrandRoutes);
+app.use("/api/team", brandManagerTeamRoutes);
 
+// Error handler middleware should be after routes
+app.use(errorHandler);
 
 // Handle 404
 app.use((req, res) => {

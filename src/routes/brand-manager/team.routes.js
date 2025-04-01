@@ -1,27 +1,28 @@
 import express from 'express';
 import {
-  getAllTeamMembers,
+  getTeamMembers,
   getTeamMember,
   createTeamMember,
   updateTeamMember,
   deleteTeamMember,
-  getTeamMembersByBrand,
-  getTeamMembersByRole,
   toggleMemberStatus
 } from '../../controllers/brand-manager/team.controllers.js';
 
 const router = express.Router();
 
-// Basic CRUD routes
-router.get('/', getAllTeamMembers);
-router.get('/:id', getTeamMember);
-router.post('/', createTeamMember);
-router.put('/:id', updateTeamMember);
-router.delete('/:id', deleteTeamMember);
+// Routes for /api/team
+router.route('/')
+  .get(getTeamMembers)
+  .post(createTeamMember);
 
-// Additional specialized routes
-router.get('/brand/:brand', getTeamMembersByBrand);
-router.get('/role/:role', getTeamMembersByRole);
-router.patch('/:id/toggle-status', toggleMemberStatus);
+// Routes for /api/team/:id
+router.route('/:id')
+  .get(getTeamMember)
+  .put(updateTeamMember)
+  .delete(deleteTeamMember);
+
+// Route for /api/team/:id/toggle-status
+router.route('/:id/toggle-status')
+  .patch(toggleMemberStatus);
 
 export default router;
