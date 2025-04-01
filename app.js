@@ -16,7 +16,7 @@ import authRoutes from "./src/routes/authRoutes.js";
 import brandOwnerProductsRoutes from "./src/routes/brand-owner/products.routes.js";
 import brandOwnerBrandRoutes from "./src/routes/brand-owner/brand.routes.js";
 import brandManagerTeamRoutes from "./src/routes/brand-manager/team.routes.js";
-
+import buyerMeetingsRoutes from "./src/routes/buyer/meetings.routes.js";
 // Get __dirname equivalent in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +53,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", brandOwnerProductsRoutes);
 app.use("/api/brand", brandOwnerBrandRoutes);
 app.use("/api/team", brandManagerTeamRoutes);
+app.use("/api/meetings", buyerMeetingsRoutes);
 
 // Error handler middleware should be after routes
 app.use(errorHandler);
