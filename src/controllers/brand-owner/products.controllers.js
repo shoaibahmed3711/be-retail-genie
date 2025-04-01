@@ -26,7 +26,16 @@ export const getProductById = async (req, res) => {
 // Create new product
 export const createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
+    const productData = req.body;
+    
+    // If there's an uploaded file, set the imageUrl
+    if (req.file) {
+      // Convert file path for URL access
+      const relativePath = `/uploads/products/${req.file.filename}`;
+      productData.imageUrl = relativePath;
+    }
+    
+    const product = new Product(productData);
     const savedProduct = await product.save();
     res.status(201).json(savedProduct);
   } catch (error) {
@@ -37,9 +46,18 @@ export const createProduct = async (req, res) => {
 // Update product
 export const updateProduct = async (req, res) => {
   try {
+    const productData = req.body;
+    
+    // If there's an uploaded file, update the imageUrl
+    if (req.file) {
+      // Convert file path for URL access
+      const relativePath = `/uploads/products/${req.file.filename}`;
+      productData.imageUrl = relativePath;
+    }
+    
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      productData,
       { new: true, runValidators: true }
     );
     if (!product) {

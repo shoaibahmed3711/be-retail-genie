@@ -74,6 +74,11 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     default: '/api/placeholder/300/300'
   },
+  imageDetails: {
+    originalName: String,
+    mimetype: String,
+    size: Number
+  },
   packaging: {
     type: String,
     trim: true
@@ -101,7 +106,7 @@ const ProductSchema = new mongoose.Schema({
 });
 
 // Pre-save middleware to calculate margin if price and cogs are provided
-ProductSchema.pre('save', function(next) {
+ProductSchema.pre('save', function (next) {
   if (this.price && this.cogs) {
     this.margin = ((this.price - this.cogs) / this.price * 100).toFixed(2);
   }
@@ -109,7 +114,7 @@ ProductSchema.pre('save', function(next) {
 });
 
 // Virtual property for discounted price
-ProductSchema.virtual('discountedPrice').get(function() {
+ProductSchema.virtual('discountedPrice').get(function () {
   if (this.discount) {
     return (this.price * (1 - this.discount / 100)).toFixed(2);
   }
@@ -117,7 +122,7 @@ ProductSchema.virtual('discountedPrice').get(function() {
 });
 
 // Methods to update sales and revenue
-ProductSchema.methods.recordSale = function(quantity, salePrice) {
+ProductSchema.methods.recordSale = function (quantity, salePrice) {
   this.salesCount += quantity;
   this.revenue += salePrice * quantity;
   return this.save();
