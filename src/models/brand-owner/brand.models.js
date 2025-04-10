@@ -22,6 +22,20 @@ const socialLinksSchema = new Schema({
   }
 });
 
+// Country Related Schema - for manufacturing and sourcing
+const componentSourceSchema = new Schema({
+  component: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  country: {
+    type: String,
+    required: true,
+    trim: true
+  }
+}, { _id: false });
+
 // Main Brand Schema
 const brandSchema = new Schema({
   // Basic Brand Information
@@ -87,6 +101,57 @@ const brandSchema = new Schema({
     default: () => ({})
   },
   
+  // Business Information
+  yearsInBusiness: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  isCanadianRegistered: {
+    type: Boolean,
+    default: false
+  },
+  registeredCountry: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  isManufacturedInCanada: {
+    type: Boolean,
+    default: false
+  },
+  manufacturingCountry: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  hasInternationalSourcing: {
+    type: Boolean,
+    default: false
+  },
+  componentSources: {
+    type: [componentSourceSchema],
+    default: []
+  },
+  productCount: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  retailerLocationCount: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  isGS1Registered: {
+    type: Boolean,
+    default: false
+  },
+  supportsEDI: {
+    type: Boolean,
+    default: false
+  },
+  
   // Owner Reference
   owner: {
     type: String,
@@ -122,7 +187,10 @@ brandSchema.methods.updateBrandInfo = function(brandData) {
   const updateableFields = [
     'name', 'tagline', 'mission', 
     'email', 'phone', 'website', 'address',
-    'socialLinks'
+    'socialLinks', 'yearsInBusiness', 'isCanadianRegistered',
+    'registeredCountry', 'isManufacturedInCanada', 'manufacturingCountry',
+    'hasInternationalSourcing', 'componentSources', 'productCount',
+    'retailerLocationCount', 'isGS1Registered', 'supportsEDI'
   ];
   
   updateableFields.forEach(field => {

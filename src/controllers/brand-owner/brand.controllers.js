@@ -45,13 +45,29 @@ const createBrand = async (req, res) => {
     }
 
     // Handle JSON-stringified objects from form data
-    ['socialLinks', 'visibilitySettings', 'businessHours'].forEach(field => {
+    ['socialLinks', 'visibilitySettings', 'businessHours', 'componentSources'].forEach(field => {
       if (req.body[field] && typeof req.body[field] === 'string') {
         try {
           req.body[field] = JSON.parse(req.body[field]);
         } catch (e) {
           console.error(`Error parsing ${field}:`, e);
         }
+      }
+    });
+
+    // Handle boolean fields
+    ['isCanadianRegistered', 'isManufacturedInCanada', 'hasInternationalSourcing', 'isGS1Registered', 'supportsEDI'].forEach(field => {
+      if (req.body[field] !== undefined) {
+        // Convert string 'true'/'false' to boolean
+        if (req.body[field] === 'true') req.body[field] = true;
+        if (req.body[field] === 'false') req.body[field] = false;
+      }
+    });
+
+    // Handle number fields
+    ['yearsInBusiness', 'productCount', 'retailerLocationCount'].forEach(field => {
+      if (req.body[field] !== undefined && req.body[field] !== '') {
+        req.body[field] = Number(req.body[field]);
       }
     });
 
@@ -92,13 +108,29 @@ const updateBrand = async (req, res) => {
     }
     
     // Handle JSON-stringified objects from form data
-    ['socialLinks', 'visibilitySettings', 'businessHours'].forEach(field => {
+    ['socialLinks', 'visibilitySettings', 'businessHours', 'componentSources'].forEach(field => {
       if (req.body[field] && typeof req.body[field] === 'string') {
         try {
           req.body[field] = JSON.parse(req.body[field]);
         } catch (e) {
           console.error(`Error parsing ${field}:`, e);
         }
+      }
+    });
+
+    // Handle boolean fields
+    ['isCanadianRegistered', 'isManufacturedInCanada', 'hasInternationalSourcing', 'isGS1Registered', 'supportsEDI'].forEach(field => {
+      if (req.body[field] !== undefined) {
+        // Convert string 'true'/'false' to boolean
+        if (req.body[field] === 'true') req.body[field] = true;
+        if (req.body[field] === 'false') req.body[field] = false;
+      }
+    });
+
+    // Handle number fields
+    ['yearsInBusiness', 'productCount', 'retailerLocationCount'].forEach(field => {
+      if (req.body[field] !== undefined && req.body[field] !== '') {
+        req.body[field] = Number(req.body[field]);
       }
     });
 
