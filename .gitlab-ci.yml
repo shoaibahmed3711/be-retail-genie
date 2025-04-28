@@ -1,0 +1,38 @@
+image: node:18
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+test:
+  stage: test
+  script:
+    - echo "PORT=5000" > .env
+    - echo "NODE_ENV=test" >> .env
+    - echo "MONGO_URI=$MONGO_URI" >> .env
+    - echo "JWT_SECRET=$JWT_SECRET" >> .env
+    - echo "JWT_EXPIRE=$JWT_EXPIRE" >> .env
+    - npm run deploy:check
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Ready for deployment to Render.com"
+  environment:
+    name: production
+  only:
+    - main
+    - master 

@@ -8,6 +8,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
+    "start": "node app.js",
+    "deploy:check": "node deploy.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -28,5 +30,8 @@
     "nodemon": "^3.1.9",
     "npm": "^11.1.0",
     "uuid": "^11.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
